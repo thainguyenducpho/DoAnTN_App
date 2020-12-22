@@ -19,17 +19,22 @@ import * as firebase from "firebase";
 const DATA = [
   {
     id: 1,
-    title: "CORONAVIRUS CASES",
+    title: "TEMPERATURE",
     number: "1 838 456",
   },
   {
     id: 2,
-    title: "TOTAL DEATHS",
+    title: "HUMIDITY",
     number: "1 29 863",
   },
   {
     id: 3,
-    title: "RECOVERED",
+    title: "SOIL MOISTURE",
+    number: "838 456",
+  },
+  {
+    id: 4,
+    title: "LIGHT",
     number: "838 456",
   },
 ];
@@ -109,14 +114,6 @@ export default class NotificationScreen extends Component {
             </View>
           </View>
           <Text style={styles.textDash}>CONTROLS</Text>
-
-          <View style={styles.colContainer}>
-            <Text style={styles.textGlobal}>GLOBAL</Text>
-            <Text style={styles.textRussia}>RUSSIA</Text>
-            <View style={styles.reloadContainer}>
-              <Icon name="md-refresh" size={24} color="red" />
-            </View>
-          </View>
         </ImageBackground>
         <Deck
           data={DATA}

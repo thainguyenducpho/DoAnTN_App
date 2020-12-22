@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import {
   FlatList,
-  StyleSheet,
   Text,
   View,
   Image,
@@ -15,13 +14,13 @@ import * as firebase from "firebase";
 import FirebaseKeys from "../../config";
 
 const rootRef = firebase.database().ref();
-const animalRef = rootRef.child("logs/tempDHT");
+const animalRef = rootRef.child("animals");
 export default class DatabaseComponent extends Component {
   constructor(props) {
     super(props);
     this.state = {
       animals: [],
-      newTempDHT: "",
+      newAnimalName: "",
       loading: false,
     };
   }
@@ -31,24 +30,25 @@ export default class DatabaseComponent extends Component {
       childSnapshot.forEach((doc) => {
         animals.push({
           key: doc.key,
-          value: doc.val(),
+          animalName: doc.toJSON().animalName,
         });
         this.setState({
           animals: animals.sort((a, b) => {
-            return a.value < b.value;
+            return a.animalName < b.animalName;
           }),
           loading: false,
         });
-        console.log("User data: ", animals);
       });
     });
   }
   onPressAdd = () => {
-    if (this.state.newTempDHT.trim() === "") {
+    if (this.state.newAnimalName.trim() === "") {
       alert("Animal name is blank");
       return;
     }
-    animalRef.push(this.state.newTempDHT);
+    animalRef.push({
+      animalName: this.state.newAnimalName,
+    });
   };
   render() {
     return (
@@ -77,9 +77,9 @@ export default class DatabaseComponent extends Component {
             placeholder="Enter animal name"
             autoCapitalize="none"
             onChangeText={(text) => {
-              this.setState({ newTempDHT: text });
+              this.setState({ newAnimalName: text });
             }}
-            value={this.state.newTempDHT}
+            value={this.state.newAnimalName}
           />
           <TouchableHighlight
             style={{ marginRight: 10 }}
@@ -88,7 +88,7 @@ export default class DatabaseComponent extends Component {
           >
             <Image
               style={{ width: 35, height: 35 }}
-              source={require("../images/1.jpeg")}
+              source={require("../icons/icons-add.png")}
             />
           </TouchableHighlight>
         </View>
@@ -103,7 +103,7 @@ export default class DatabaseComponent extends Component {
                   margin: 10,
                 }}
               >
-                {item.value}
+                {item.animalName}
               </Text>
             );
           }}
