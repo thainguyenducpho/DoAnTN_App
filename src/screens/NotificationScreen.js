@@ -14,13 +14,37 @@ import Deck from "../components/Deck";
 import Cards from "../components/Cards";
 import * as firebase from "firebase";
 
-// import Buttons from "../components/Buttons";
+const rootRef = firebase.database().ref();
+const tempDHT = rootRef.child("logs/tempDHT");
+const humDHT = rootRef.child("logs/humDHT");
+const soilMoist = rootRef.child("logs/soilMoist");
+const fanStatus = rootRef.child("logs/fanStatus");
+const pumpStatus = rootRef.child("logs/pumpStatus");
+const lampStatus = rootRef.child("logs/lampStatus");
+const lumen = rootRef.child("logs/lumen");
+
+const getlogtemDHT = () => {
+  tempDHT.on("value", (childSnapshot) => {
+    const tempDHT = [];
+    childSnapshot.forEach((doc) => {
+      tempDHT.push({
+        id: doc.key,
+        value: doc.val(),
+      });
+      console.log("User data: ", tempDHT);
+      console.log("User data: ", tempDHT[0].value);
+      // console.log("User data: ", tempDHT[1].value);
+      // console.log("User data: ", tempDHT[2].value);
+      // console.log("User data: ", tempDHT[3].value);
+    });
+  });
+};
 
 const DATA = [
   {
     id: 1,
     title: "TEMPERATURE",
-    number: "1 838 456",
+    number: "555 555",
   },
   {
     id: 2,
@@ -38,17 +62,27 @@ const DATA = [
     number: "838 456",
   },
 ];
+
 export default class NotificationScreen extends Component {
   static navigationOptions = { headerShown: false };
+
   state = {
     email: "",
     displayName: "",
   };
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      tempDHT: [],
+      loading: false,
+    };
+  }
+
   componentDidMount() {
     const { email, displayName } = firebase.auth().currentUser;
-
     this.setState({ email, displayName });
+    getlogtemDHT();
   }
 
   signOutUser = () => {
@@ -138,6 +172,12 @@ export default class NotificationScreen extends Component {
             title="RECOVERED"
             bg="#FFF"
             number="442 329"
+          />
+          <Cards
+            icon="ios-heart-dislike"
+            title="DEATH CASES"
+            bg="#FFF"
+            number="113 329"
           />
           <Cards
             icon="ios-heart-dislike"

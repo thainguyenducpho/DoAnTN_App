@@ -7,8 +7,39 @@ import * as theme from "../components/theme";
 import { Block, Text } from "../components";
 import mocks from "../components/settings";
 
+import FirebaseKeys from "../../config";
+
+// const rootRef = firebase.database().ref();
+// const animalRef = rootRef.child("logs/tempDHT");
 class Dashboard extends Component {
   static navigationOptions = { headerShown: false };
+
+  // constructor(props) {
+  //   super(props);
+  //   this.state = {
+  //     animals: [],
+  //     newTempDHT: "",
+  //     loading: false,
+  //   };
+  // }
+  // componentDidMount() {
+  //   animalRef.on("value", (childSnapshot) => {
+  //     const animals = [];
+  //     childSnapshot.forEach((doc) => {
+  //       animals.push({
+  //         key: doc.key,
+  //         value: doc.val(),
+  //       });
+  //       this.setState({
+  //         animals: animals.sort((a, b) => {
+  //           return a.value < b.value;
+  //         }),
+  //         loading: false,
+  //       });
+  //       console.log("User data: ", animals);
+  //     });
+  //   });
+  // }
 
   render() {
     const { settings } = this.props;
