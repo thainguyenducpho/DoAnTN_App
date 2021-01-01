@@ -23,46 +23,6 @@ const pumpStatus = rootRef.child("logs/pumpStatus");
 const lampStatus = rootRef.child("logs/lampStatus");
 const lumen = rootRef.child("logs/lumen");
 
-const getlogtemDHT = () => {
-  tempDHT.on("value", (childSnapshot) => {
-    const tempDHT = [];
-    childSnapshot.forEach((doc) => {
-      tempDHT.push({
-        id: doc.key,
-        value: doc.val(),
-      });
-      console.log("User data: ", tempDHT);
-      console.log("User data: ", tempDHT[0].value);
-      // console.log("User data: ", tempDHT[1].value);
-      // console.log("User data: ", tempDHT[2].value);
-      // console.log("User data: ", tempDHT[3].value);
-    });
-  });
-};
-
-const DATA = [
-  {
-    id: 1,
-    title: "TEMPERATURE",
-    number: "555 555",
-  },
-  {
-    id: 2,
-    title: "HUMIDITY",
-    number: "1 29 863",
-  },
-  {
-    id: 3,
-    title: "SOIL MOISTURE",
-    number: "838 456",
-  },
-  {
-    id: 4,
-    title: "LIGHT",
-    number: "838 456",
-  },
-];
-
 export default class NotificationScreen extends Component {
   static navigationOptions = { headerShown: false };
 
@@ -74,7 +34,14 @@ export default class NotificationScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      tempDHT: [],
+      root: [],
+      fanStatus: "",
+      humDHT: "",
+      lampStatus: "",
+      lightStatus: "",
+      pumpStatus: "",
+      soilMoist: "",
+      tempDHT: "",
       loading: false,
     };
   }
@@ -82,8 +49,71 @@ export default class NotificationScreen extends Component {
   componentDidMount() {
     const { email, displayName } = firebase.auth().currentUser;
     this.setState({ email, displayName });
-    getlogtemDHT();
+
+    rootRef.on("value", (snapshot) => {
+      const root = [];
+      root.push(
+        {
+          id: Math.floor(Math.random() * 100) + 1,
+          title: "TEMPERATURE",
+          number: snapshot.child("tempDHT").val(),
+        },
+        {
+          id: Math.floor(Math.random() * 100) + 1,
+          title: "HUMIDITY",
+          number: snapshot.child("humDHT").val(),
+        },
+        {
+          id: Math.floor(Math.random() * 100) + 1,
+          title: "SOIL MOIST",
+          number: snapshot.child("soilMoist").val(),
+        },
+        {
+          id: Math.floor(Math.random() * 100) + 1,
+          title: "PUMP STATUS",
+          number: snapshot.child("pumpStatus").val(),
+        },
+        {
+          id: Math.floor(Math.random() * 100) + 1,
+          title: "LAMP STATUS",
+          number: snapshot.child("lampStatus").val(),
+        },
+        {
+          id: Math.floor(Math.random() * 100) + 1,
+          title: "LIGHT STATUS",
+          number: snapshot.child("lightStatus").val(),
+        }
+      );
+      console.log("User data: ", root);
+      this.setState({
+        root: root,
+      });
+    });
   }
+
+  // componentDidMount() {
+  //   const { email, displayName } = firebase.auth().currentUser;
+  //   this.setState({ email, displayName });
+
+  //   tempDHT.on("value", (childSnapshot) => {
+  //     const tempDHT = [];
+  //     childSnapshot.forEach((doc) => {
+  //       tempDHT.push({
+  //         id: doc.key,
+  //         title: "TEMPERATURE",
+  //         number: doc.val(),
+  //       });
+  //     });
+  //     console.log("User data: ", tempDHT);
+  //     // console.log("User data: ", tempDHT[0].value);
+  //     // console.log("User data: ", tempDHT[1].value);
+  //     // console.log("User data: ", tempDHT[2].value);
+
+  //     this.setState({
+  //       tempDHT: tempDHT,
+  //     });
+  //   });
+  // }
 
   signOutUser = () => {
     firebase.auth().signOut();
@@ -150,7 +180,7 @@ export default class NotificationScreen extends Component {
           <Text style={styles.textDash}>CONTROLS</Text>
         </ImageBackground>
         <Deck
-          data={DATA}
+          data={this.state.root}
           renderCard={this.renderCard}
           renderNoMoreCards={this.renderNoMoreCards}
         />

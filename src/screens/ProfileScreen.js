@@ -15,34 +15,40 @@ import * as firebase from "firebase";
 import FirebaseKeys from "../../config";
 
 const rootRef = firebase.database().ref();
-const animalRef = rootRef.child("logs/tempDHT");
+const logRef = rootRef.child("logs/tempDHT");
+const tempDHTRef = rootRef.child("tempDHT");
 export default class DatabaseComponent extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      animals: [],
-      newTempDHT: "",
+      root: [],
+      TempDHT: [],
+      fanStatus: "",
+      humDHT: "",
+      lampStatus: "",
+      lightStatus: "",
+      pumpStatus: "",
+      soilMoist: "",
+      tempDHT: "",
       loading: false,
     };
   }
+
   componentDidMount() {
-    animalRef.on("value", (childSnapshot) => {
-      const animals = [];
-      childSnapshot.forEach((doc) => {
-        animals.push({
-          key: doc.key,
-          value: doc.val(),
-        });
-        this.setState({
-          animals: animals.sort((a, b) => {
-            return a.value < b.value;
-          }),
-          loading: false,
-        });
-        // console.log("User data: ", animals);
+    rootRef.once("value").then(function (snapshot) {
+      const root = [];
+      root.push({
+        humDHT: snapshot.child("humDHT").val(),
+        tempDHT: snapshot.child("tempDHT").val(),
+        soilMoist: snapshot.child("soilMoist").val(),
+        pumpStatus: snapshot.child("pumpStatus").val(),
+        lampStatus: snapshot.child("lampStatus").val(),
+        lightStatus: snapshot.child("lightStatus").val(),
       });
+      console.log("User data: ", root);
     });
   }
+
   onPressAdd = () => {
     if (this.state.newTempDHT.trim() === "") {
       alert("Animal name is blank");
@@ -112,23 +118,3 @@ export default class DatabaseComponent extends Component {
     );
   }
 }
-// import React, { Component } from "react";
-// import { Text, View, StyleSheet } from "react-native";
-
-// export default class ProfileScreen extends Component {
-//   render() {
-//     return (
-//       <View style={styles.container}>
-//         <AppContainer />
-//       </View>
-//     );
-//   }
-// }
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     backgroundColor: "#fff",
-//     alignItems: "center",
-//     justifyContent: "center",
-//   },
-// });
