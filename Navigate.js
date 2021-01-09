@@ -15,7 +15,6 @@ import NotificationScreen from "./src/screens/NotificationScreen";
 import DetailsScreen from "./src/screens/DetailsScreen";
 
 import ProfileScreen from "./src/screens/ProfileScreen";
-import { View } from "react-native";
 
 const AuthStack = createStackNavigator({
   Login: LoginScreen,

@@ -16,12 +16,6 @@ import * as firebase from "firebase";
 
 const rootRef = firebase.database().ref();
 const tempDHT = rootRef.child("logs/tempDHT");
-const humDHT = rootRef.child("logs/humDHT");
-const soilMoist = rootRef.child("logs/soilMoist");
-const fanStatus = rootRef.child("logs/fanStatus");
-const pumpStatus = rootRef.child("logs/pumpStatus");
-const lampStatus = rootRef.child("logs/lampStatus");
-const lumen = rootRef.child("logs/lumen");
 
 export default class NotificationScreen extends Component {
   static navigationOptions = { headerShown: false };
@@ -34,14 +28,8 @@ export default class NotificationScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      TempDHT: [],
       root: [],
-      fanStatus: "",
-      humDHT: "",
-      lampStatus: "",
-      lightStatus: "",
-      pumpStatus: "",
-      soilMoist: "",
-      tempDHT: "",
       loading: false,
     };
   }
@@ -54,66 +42,53 @@ export default class NotificationScreen extends Component {
       const root = [];
       root.push(
         {
-          id: Math.floor(Math.random() * 100) + 1,
+          id: Math.floor(Math.random() * 1000) + 1,
           title: "TEMPERATURE",
-          number: snapshot.child("tempDHT").val(),
+          number: snapshot.child("tempDHT").val() + " ℃",
         },
         {
-          id: Math.floor(Math.random() * 100) + 1,
+          id: Math.floor(Math.random() * 1000) + 1,
           title: "HUMIDITY",
-          number: snapshot.child("humDHT").val(),
+          number: snapshot.child("humDHT").val() + " %",
         },
         {
-          id: Math.floor(Math.random() * 100) + 1,
+          id: Math.floor(Math.random() * 1000) + 1,
           title: "SOIL MOIST",
-          number: snapshot.child("soilMoist").val(),
+          number: snapshot.child("soilMoist").val() + " %",
         },
         {
-          id: Math.floor(Math.random() * 100) + 1,
+          id: Math.floor(Math.random() * 1000) + 1,
           title: "PUMP STATUS",
-          number: snapshot.child("pumpStatus").val(),
+          number: snapshot.child("pumpStatus").val() == 1 ? "ON" : "OFF",
         },
         {
-          id: Math.floor(Math.random() * 100) + 1,
+          id: Math.floor(Math.random() * 1000) + 1,
           title: "LAMP STATUS",
-          number: snapshot.child("lampStatus").val(),
+          number: snapshot.child("lampStatus").val() == 1 ? "ON" : "OFF",
         },
         {
-          id: Math.floor(Math.random() * 100) + 1,
+          id: Math.floor(Math.random() * 1000) + 1,
           title: "LIGHT STATUS",
-          number: snapshot.child("lightStatus").val(),
+          number: snapshot.child("lightStatus").val() == 1 ? "ON" : "OFF",
         }
       );
-      console.log("User data: ", root);
+      // console.log("User data: ", root);
       this.setState({
         root: root,
       });
     });
+
+    tempDHT.on("value", (childSnapshot) => {
+      const TempDHT = [];
+      childSnapshot.forEach((doc) => {
+        TempDHT.push(doc.val());
+      });
+      this.setState({
+        TempDHT: TempDHT,
+      });
+      console.log("User data notification: ", TempDHT);
+    });
   }
-
-  // componentDidMount() {
-  //   const { email, displayName } = firebase.auth().currentUser;
-  //   this.setState({ email, displayName });
-
-  //   tempDHT.on("value", (childSnapshot) => {
-  //     const tempDHT = [];
-  //     childSnapshot.forEach((doc) => {
-  //       tempDHT.push({
-  //         id: doc.key,
-  //         title: "TEMPERATURE",
-  //         number: doc.val(),
-  //       });
-  //     });
-  //     console.log("User data: ", tempDHT);
-  //     // console.log("User data: ", tempDHT[0].value);
-  //     // console.log("User data: ", tempDHT[1].value);
-  //     // console.log("User data: ", tempDHT[2].value);
-
-  //     this.setState({
-  //       tempDHT: tempDHT,
-  //     });
-  //   });
-  // }
 
   signOutUser = () => {
     firebase.auth().signOut();
@@ -190,7 +165,11 @@ export default class NotificationScreen extends Component {
           horizontal
         >
           <Cards
-            onPress={() => this.props.navigation.navigate("Detail")}
+            onPress={() =>
+              this.props.navigation.navigate("Detail", {
+                data: this.state.TempDHT,
+              })
+            }
             icon="md-pulse"
             title="TOTAL CASES"
             bg="red"

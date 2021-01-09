@@ -15,40 +15,34 @@ import * as firebase from "firebase";
 import FirebaseKeys from "../../config";
 
 const rootRef = firebase.database().ref();
-const logRef = rootRef.child("logs/tempDHT");
-const tempDHTRef = rootRef.child("tempDHT");
+const animalRef = rootRef.child("logs/tempDHT");
 export default class DatabaseComponent extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      root: [],
-      TempDHT: [],
-      fanStatus: "",
-      humDHT: "",
-      lampStatus: "",
-      lightStatus: "",
-      pumpStatus: "",
-      soilMoist: "",
-      tempDHT: "",
+      animals: [],
+      newTempDHT: "",
       loading: false,
     };
   }
-
   componentDidMount() {
-    rootRef.once("value").then(function (snapshot) {
-      const root = [];
-      root.push({
-        humDHT: snapshot.child("humDHT").val(),
-        tempDHT: snapshot.child("tempDHT").val(),
-        soilMoist: snapshot.child("soilMoist").val(),
-        pumpStatus: snapshot.child("pumpStatus").val(),
-        lampStatus: snapshot.child("lampStatus").val(),
-        lightStatus: snapshot.child("lightStatus").val(),
+    animalRef.on("value", (childSnapshot) => {
+      const animals = [];
+      childSnapshot.forEach((doc) => {
+        animals.push({
+          key: doc.key,
+          value: doc.val(),
+        });
+        this.setState({
+          animals: animals.sort((a, b) => {
+            return a.value < b.value;
+          }),
+          loading: false,
+        });
+        console.log("User data: ", animals);
       });
-      console.log("User data: ", root);
     });
   }
-
   onPressAdd = () => {
     if (this.state.newTempDHT.trim() === "") {
       alert("Animal name is blank");

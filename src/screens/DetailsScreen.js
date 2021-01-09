@@ -1,10 +1,22 @@
 import React, { Component } from "react";
-import { View, StyleSheet, Image, Text } from "react-native";
+import { View, StyleSheet, Image, Text, TouchableOpacity } from "react-native";
 import Icon from "@expo/vector-icons/Ionicons";
 import Chart from "../components/Chart";
 
 export default class DetailsScreen extends Component {
   static navigationOptions = { headerShown: false };
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      data: this.props.navigation.getParam("data"),
+      loading: false,
+    };
+  }
+
+  onPressAdd = () => {
+    console.log("data passing: ", this.state.data);
+  };
 
   render() {
     return (
@@ -21,21 +33,17 @@ export default class DetailsScreen extends Component {
             />
           </View>
         </View>
-        <View style={styles.optionCard}>
-          <View style={styles.optionCol}>
-            <Text style={styles.textLinear}>LINEAR</Text>
-          </View>
-          <Text style={styles.textLogarthimic}>LOGARTHIMIC</Text>
-        </View>
         <View style={styles.locationContainer}>
           <Text style={styles.textGlobal}>GLOBAL</Text>
           <Text style={styles.textRussia}>RUSSIA</Text>
           <View style={styles.reloadContainer}>
-            <Icon name="md-refresh" size={24} color="red" />
+            <TouchableOpacity onPress={this.onPressAdd}>
+              <Icon name="md-refresh" size={24} color="red" />
+            </TouchableOpacity>
           </View>
         </View>
 
-        <Chart />
+        <Chart sendDataChart={this.state.data} />
       </View>
     );
   }
@@ -66,28 +74,28 @@ const styles = StyleSheet.create({
     height: 40,
     borderRadius: 20,
   },
-  optionCard: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginHorizontal: 110,
-  },
-  optionCol: {
-    backgroundColor: "#000",
-    paddingVertical: 2,
-    paddingHorizontal: 5,
-    borderRadius: 2,
-  },
-  textLinear: {
-    color: "#FFF",
-    fontSize: 12,
-    fontWeight: "bold",
-  },
-  textLogarthimic: {
-    color: "#b8b8aa",
-    fontWeight: "bold",
-    fontSize: 12,
-    marginLeft: 15,
-  },
+  // optionCard: {
+  //   flexDirection: "row",
+  //   alignItems: "center",
+  //   marginHorizontal: 110,
+  // },
+  // optionCol: {
+  //   backgroundColor: "#000",
+  //   paddingVertical: 2,
+  //   paddingHorizontal: 5,
+  //   borderRadius: 2,
+  // },
+  // textLinear: {
+  //   color: "#FFF",
+  //   fontSize: 12,
+  //   fontWeight: "bold",
+  // },
+  // textLogarthimic: {
+  //   color: "#b8b8aa",
+  //   fontWeight: "bold",
+  //   fontSize: 12,
+  //   marginLeft: 15,
+  // },
   locationContainer: {
     alignSelf: "center",
     flexDirection: "row",
