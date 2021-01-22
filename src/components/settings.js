@@ -71,4 +71,15 @@ export default {
       />
     ),
   },
+  pump: {
+    name: "Pump",
+    icon: ({ size, color, ...props }) => (
+      <MaterialCommunityIcons
+        size={size || theme.sizes.font}
+        color={color || theme.colors.accent}
+        name="water-pump"
+        {...props}
+      />
+    ),
+  },
 };

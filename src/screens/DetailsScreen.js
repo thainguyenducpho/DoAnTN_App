@@ -10,6 +10,8 @@ export default class DetailsScreen extends Component {
     super(props);
     this.state = {
       data: this.props.navigation.getParam("data"),
+      color: this.props.navigation.getParam("color"),
+      textScreen: this.props.navigation.getParam("text"),
       loading: false,
     };
   }
@@ -21,7 +23,7 @@ export default class DetailsScreen extends Component {
   render() {
     return (
       <View style={styles.page}>
-        <View style={styles.headContainer}>
+        {/* <View style={styles.headContainer}>
           <View style={styles.humContainer}>
             <Icon name="md-remove" size={26} />
             <Icon name="md-remove" size={26} style={styles.hum} />
@@ -32,18 +34,11 @@ export default class DetailsScreen extends Component {
               style={styles.profile}
             />
           </View>
-        </View>
+        </View> */}
         <View style={styles.locationContainer}>
-          <Text style={styles.textGlobal}>GLOBAL</Text>
-          <Text style={styles.textRussia}>RUSSIA</Text>
-          <View style={styles.reloadContainer}>
-            <TouchableOpacity onPress={this.onPressAdd}>
-              <Icon name="md-refresh" size={24} color="red" />
-            </TouchableOpacity>
-          </View>
+          <Text style={styles.textGlobal}>{this.state.textScreen}</Text>
         </View>
-
-        <Chart sendDataChart={this.state.data} />
+        <Chart sendDataChart={this.state.data} sendColor={this.state.color} />
       </View>
     );
   }
@@ -53,49 +48,27 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFF",
     flex: 1,
   },
-  headContainer: {
-    marginHorizontal: 20,
-    flexDirection: "row",
-    marginTop: 40,
-  },
-  humContainer: {
-    width: "50%",
-  },
-  hum: {
-    marginTop: -20,
-    marginLeft: 5,
-  },
-  profileContainer: {
-    width: "50%",
-    alignItems: "flex-end",
-  },
+  // headContainer: {
+  //   marginHorizontal: 20,
+  //   flexDirection: "row",
+  //   marginTop: 40,
+  // },
+  // humContainer: {
+  //   width: "50%",
+  // },
+  // hum: {
+  //   marginTop: -20,
+  //   marginLeft: 5,
+  // },
+  // profileContainer: {
+  //   width: "50%",
+  //   alignItems: "flex-end",
+  // },
   profile: {
     width: 40,
     height: 40,
     borderRadius: 20,
   },
-  // optionCard: {
-  //   flexDirection: "row",
-  //   alignItems: "center",
-  //   marginHorizontal: 110,
-  // },
-  // optionCol: {
-  //   backgroundColor: "#000",
-  //   paddingVertical: 2,
-  //   paddingHorizontal: 5,
-  //   borderRadius: 2,
-  // },
-  // textLinear: {
-  //   color: "#FFF",
-  //   fontSize: 12,
-  //   fontWeight: "bold",
-  // },
-  // textLogarthimic: {
-  //   color: "#b8b8aa",
-  //   fontWeight: "bold",
-  //   fontSize: 12,
-  //   marginLeft: 15,
-  // },
   locationContainer: {
     alignSelf: "center",
     flexDirection: "row",
@@ -106,23 +79,7 @@ const styles = StyleSheet.create({
   textGlobal: {
     fontWeight: "bold",
     fontSize: 16,
-    color: "red",
-  },
-  textRussia: {
-    fontWeight: "bold",
-    fontSize: 16,
-    color: "#6a706e",
-    paddingHorizontal: 30,
-  },
-  reloadContainer: {
-    backgroundColor: "#FFF",
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    alignItems: "center",
-    justifyContent: "center",
-    marginLeft: 50,
-    elevation: 3,
+    color: "black",
   },
   bottomCard: {
     backgroundColor: "#1c2732",

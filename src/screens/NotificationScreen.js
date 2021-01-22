@@ -7,15 +7,19 @@ import {
   Button,
   ImageBackground,
   TouchableOpacity,
+  NativeModules,
 } from "react-native";
 import Icon from "@expo/vector-icons/Ionicons";
 import { ScrollView } from "react-native-gesture-handler";
+import RNRestart from "react-native-restart";
 import Deck from "../components/Deck";
 import Cards from "../components/Cards";
 import * as firebase from "firebase";
 
 const rootRef = firebase.database().ref();
-const tempDHT = rootRef.child("logs/tempDHT");
+const tempDHT = rootRef.child("logs/tempDHT").limitToLast(6);
+const humDHT = rootRef.child("logs/humDHT").limitToLast(6);
+const soilMoist = rootRef.child("logs/soilMoist").limitToLast(6);
 
 export default class NotificationScreen extends Component {
   static navigationOptions = { headerShown: false };
@@ -28,8 +32,13 @@ export default class NotificationScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      TempDHT: [],
       root: [],
+      TempDHT: [],
+      HumDHT: [],
+      SoilMoist: [],
+      temp_display: "",
+      humi_display: "",
+      soil_display: "",
       loading: false,
     };
   }
@@ -37,6 +46,30 @@ export default class NotificationScreen extends Component {
   componentDidMount() {
     const { email, displayName } = firebase.auth().currentUser;
     this.setState({ email, displayName });
+
+    rootRef.on("value", (snapshot) => {
+      const data = snapshot.child("tempDHT").val();
+      this.setState({
+        temp_display: data,
+      });
+      console.log("temp_display: ", data);
+    });
+
+    rootRef.on("value", (snapshot) => {
+      const data = snapshot.child("humDHT").val();
+      this.setState({
+        humi_display: data,
+      });
+      console.log("humi_display: ", data);
+    });
+
+    rootRef.on("value", (snapshot) => {
+      const data = snapshot.child("soilMoist").val();
+      this.setState({
+        soil_display: data,
+      });
+      console.log("soil_display: ", data);
+    });
 
     rootRef.on("value", (snapshot) => {
       const root = [];
@@ -63,35 +96,65 @@ export default class NotificationScreen extends Component {
         },
         {
           id: Math.floor(Math.random() * 1000) + 1,
+          title: "FAN STATUS",
+          number: snapshot.child("fanStatus").val() == 1 ? "ON" : "OFF",
+        },
+        {
+          id: Math.floor(Math.random() * 1000) + 1,
           title: "LAMP STATUS",
           number: snapshot.child("lampStatus").val() == 1 ? "ON" : "OFF",
         },
         {
           id: Math.floor(Math.random() * 1000) + 1,
           title: "LIGHT STATUS",
-          number: snapshot.child("lightStatus").val() == 1 ? "ON" : "OFF",
+          number:
+            snapshot.child("lightStatus").val() == 1 ? "Day Time" : "Nigh Time",
         }
       );
-      // console.log("User data: ", root);
       this.setState({
         root: root,
       });
+      // console.log("root: ", root);
     });
 
-    tempDHT.on("value", (childSnapshot) => {
+    tempDHT.on("value", (snapshot) => {
       const TempDHT = [];
-      childSnapshot.forEach((doc) => {
+      snapshot.forEach((doc) => {
         TempDHT.push(doc.val());
       });
       this.setState({
         TempDHT: TempDHT,
       });
-      console.log("User data notification: ", TempDHT);
     });
+
+    humDHT.on("value", (snapshot) => {
+      const HumDHT = [];
+      snapshot.forEach((doc) => {
+        HumDHT.push(doc.val());
+      });
+      this.setState({
+        HumDHT: HumDHT,
+      });
+    });
+
+    soilMoist.on("value", (snapshot) => {
+      const SoilMoist = [];
+      snapshot.forEach((doc) => {
+        SoilMoist.push(doc.val());
+      });
+      this.setState({
+        SoilMoist: SoilMoist,
+      });
+    });
+  }
+  onRefresh() {
+    RNRestart.Restart();
   }
 
   signOutUser = () => {
     firebase.auth().signOut();
+    // NativeModules.DevSettings.reload();
+    // RNRestart.Restart();
   };
 
   renderCard(item) {
@@ -121,7 +184,11 @@ export default class NotificationScreen extends Component {
     return (
       <View title="All Domne!">
         <Text style={styles.noCard}>NO MORE CARDS HERE</Text>
-        <Button backgroundColor="#03A9F4" title="Get more!" />
+        <Button
+          backgroundColor="#03A9F4"
+          title="Get more!"
+          onPress={this.onRefresh}
+        />
       </View>
     );
   }
@@ -129,10 +196,7 @@ export default class NotificationScreen extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <ImageBackground
-          source={require("../images/unnamed.jpg")}
-          style={styles.map}
-        >
+        <ImageBackground source={require("../images/3.png")} style={styles.map}>
           <View style={styles.col}>
             <View style={{ width: "50%" }}>
               <Icon name="md-remove" color="#FFF" size={26} />
@@ -146,7 +210,7 @@ export default class NotificationScreen extends Component {
             <View style={styles.avatarContainer}>
               <TouchableOpacity onPress={this.signOutUser}>
                 <Image
-                  source={require("../images/1.jpeg")}
+                  source={require("../images/spkt_cee.png")}
                   style={styles.avatar}
                 />
               </TouchableOpacity>
@@ -168,31 +232,40 @@ export default class NotificationScreen extends Component {
             onPress={() =>
               this.props.navigation.navigate("Detail", {
                 data: this.state.TempDHT,
+                color: "tomato",
+                text: "TEMPERATURE",
               })
             }
             icon="md-pulse"
-            title="TOTAL CASES"
-            bg="red"
-            number="113 329"
+            title="TEMPERATURE"
+            bg="tomato"
+            number={this.state.temp_display + " ℃"}
           />
           <Cards
-            onPress={() => this.props.navigation.navigate("Detail")}
+            onPress={() =>
+              this.props.navigation.navigate("Detail", {
+                data: this.state.HumDHT,
+                color: "skyblue",
+                text: "HUMIDITY",
+              })
+            }
             icon="ios-git-network"
-            title="RECOVERED"
-            bg="#FFF"
-            number="442 329"
+            title="HUMIDITY"
+            bg="skyblue"
+            number={this.state.humi_display + " %"}
           />
           <Cards
+            onPress={() =>
+              this.props.navigation.navigate("Detail", {
+                data: this.state.SoilMoist,
+                color: "greenyellow",
+                text: "SOIL MOIST",
+              })
+            }
             icon="ios-heart-dislike"
-            title="DEATH CASES"
-            bg="#FFF"
-            number="113 329"
-          />
-          <Cards
-            icon="ios-heart-dislike"
-            title="DEATH CASES"
-            bg="#FFF"
-            number="113 329"
+            title="SOIL MOIST"
+            bg="greenyellow"
+            number={this.state.soil_display + " %"}
           />
         </ScrollView>
       </View>
@@ -202,13 +275,13 @@ export default class NotificationScreen extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#1c2732",
+    backgroundColor: "white",
   },
   cardContainer: {
     height: 150,
     width: 320,
     alignSelf: "center",
-    backgroundColor: "#6A706E",
+    backgroundColor: "#3E8D31",
     borderRadius: 30,
   },
   card: {
@@ -216,7 +289,7 @@ const styles = StyleSheet.create({
     width: 260,
     paddingTop: 20,
     paddingHorizontal: 30,
-    backgroundColor: "#2b3240",
+    backgroundColor: "#3ED400",
     borderRadius: 30,
     flexDirection: "row",
   },
@@ -249,8 +322,8 @@ const styles = StyleSheet.create({
   },
   map: {
     height: 200,
-    paddingTop: 25,
-    paddingHorizontal: 20,
+    paddingTop: 35,
+    paddingHorizontal: 30,
     marginBottom: 15,
   },
   col: {

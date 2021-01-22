@@ -8,6 +8,8 @@ import { Block, Text, PanSlider } from "../components";
 import mocks from "../components/settings";
 
 class Settings extends Component {
+  // static navigationOptions = { headerShown: false };
+
   static navigationOptions = {
     headerLeft: ({ onPress }) => (
       <TouchableWithoutFeedback onPress={() => onPress()}>
@@ -51,7 +53,7 @@ class Settings extends Component {
       <Block flex={1} style={styles.settings}>
         <Block flex={0.5} row>
           <Block column>
-            <Icon size={theme.sizes.font * 4} color={theme.colors.gray2} />
+            <Icon size={theme.sizes.font * 3.5} color={theme.colors.gray} />
             <Block flex={1.2} row style={{ alignItems: "flex-end" }}>
               <Text h1>27</Text>
               <Text h1 size={34} height={80} weight={"600"} spacing={0.1}>
@@ -75,12 +77,12 @@ class Settings extends Component {
               </Text>
             </Block>
             <Slider
-              value={45}
+              value={11}
               mininumValue={0}
               maximumValue={90}
               thumbTintColor={theme.colors.accent}
               minimumTrackTintColor={theme.colors.accent}
-              maximumTrackTintColor={theme.colors.gray2}
+              maximumTrackTintColor={theme.colors.gray}
               onValueChange={(value) =>
                 this.setState({ direction: parseInt(value, 10) })
               }
@@ -102,7 +104,7 @@ class Settings extends Component {
               maximumValue={30}
               thumbTintColor={theme.colors.accent}
               minimumTrackTintColor={theme.colors.accent}
-              maximumTrackTintColor={theme.colors.gray2}
+              maximumTrackTintColor={theme.colors.gray}
               onValueChange={(value) =>
                 this.setState({ speed: parseInt(value, 10) })
               }

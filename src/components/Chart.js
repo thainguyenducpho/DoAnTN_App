@@ -1,10 +1,11 @@
 import React from "react";
 import { Dimensions, StyleSheet, View } from "react-native";
 import {
-  VictoryLine,
+  VictoryArea,
   VictoryChart,
   VictoryTheme,
-  VictoryLabel,
+  VictoryAxis,
+  VictoryScatter,
 } from "victory-native";
 import * as firebase from "firebase";
 
@@ -45,38 +46,13 @@ export default class Chart extends React.Component {
     super(props);
     this.state = {
       data: this.props.sendDataChart,
+      color: this.props.sendColor,
       loading: false,
     };
   }
   componentDidMount() {
-    console.log("data draw chart", this.state.data);
+    console.log("data draw chart", this.state.color);
   }
-
-  // constructor(props) {
-  //   super(props);
-  //   this.state = {
-  //     TempDHT: [],
-  //     // HumDHT: [],
-  //     // SoilMoist: [],
-  //     // PumpStatus: [],
-  //     // LampStatus: [],
-  //     // LightStatus: [],
-  //     loading: false,
-  //   };
-  // }
-
-  // componentDidMount() {
-  //   tempDHT.on("value", (childSnapshot) => {
-  //     const TempDHT = [];
-  //     childSnapshot.forEach((doc) => {
-  //       TempDHT.push(doc.val());
-  //     });
-  //     this.setState({
-  //       TempDHT: TempDHT,
-  //     });
-  //     // console.log("User data chart: ", TempDHT);
-  //   });
-  // }
 
   render() {
     return (
@@ -84,14 +60,22 @@ export default class Chart extends React.Component {
         <VictoryChart
           width={Dimensions.get("window").width}
           theme={VictoryTheme.material}
-          minDomain={{ y: 0 }}
-          maxDomain={{ y: 50 }}
+          minDomain={{ y: 10 }}
+          maxDomain={{ y: 80 }}
+          domain={{ x: [0, 5] }}
         >
-          <VictoryLine
+          <VictoryAxis dependentAxis style={{ tickLabels: { angle: -60 } }} />
+          <VictoryAxis />
+          <VictoryArea
             style={{
-              data: { stroke: "#c43a31" },
-              parent: { border: "1px solid #ccc" },
+              data: {
+                fill: this.state.color,
+                fillOpacity: 0.15,
+                stroke: this.state.color,
+                strokeWidth: 3,
+              },
             }}
+            labels={({ datum }) => datum.y}
             data={this.state.data}
             interpolation="natural"
             categories={{
@@ -105,9 +89,14 @@ export default class Chart extends React.Component {
               ],
             }}
             animate={{
-              duration: 2000,
-              onLoad: { duration: 1000 },
+              duration: 1500,
+              onLoad: { duration: 700 },
             }}
+          />
+          <VictoryScatter
+            style={{ data: { fill: this.state.color } }}
+            size={5}
+            data={this.state.data}
           />
         </VictoryChart>
       </View>

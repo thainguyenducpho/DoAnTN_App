@@ -18,6 +18,7 @@ export default class RegisterScreen extends Component {
     name: "",
     email: "",
     password: "",
+    confirmpass: "",
     errorMessagage: null,
   };
 
@@ -35,100 +36,137 @@ export default class RegisterScreen extends Component {
 
   render() {
     return (
-      <View style={styles.container}>
-        <StatusBar barStyle="light-content"></StatusBar>
+      <View style={{ backgroundColor: "#FFF", height: "100%" }}>
         <Image
-          source={require("../images/Paradise.png")}
-          style={{ flex: 1, width: null, height: null, resizeMode: "contain" }}
+          source={require("../images/image.jpg")}
+          style={{ width: "100%", height: "43%" }}
         />
-        <Image
-          source={require("../images/test.png")}
+        <Text
           style={{
-            position: "absolute",
-            bottom: -300,
-            right: -250,
+            fontSize: 30,
+            alignSelf: "center",
           }}
-        />
-
-        <TouchableOpacity
-          style={styles.back}
-          onPress={() => this.props.navigation.goBack()}
         >
-          <Ionicons name="ios-arrow-round-back" size={32} color="#FFF" />
-        </TouchableOpacity>
+          Save the world
+        </Text>
+
+        <Text
+          style={{
+            marginHorizontal: 55,
+            textAlign: "center",
+            marginTop: 5,
+            opacity: 0.4,
+          }}
+        >
+          Ứng dụng hiệu quả công nghệ để có một cuộc sống tốt đẹp hơn!
+        </Text>
 
         <View
           style={{
-            position: "absolute",
-            top: 40,
+            flexDirection: "row",
             alignItems: "center",
-            width: "100%",
+            marginHorizontal: 55,
+            borderWidth: 2,
+            marginTop: 10,
+            paddingHorizontal: 10,
+            borderColor: "#00716F",
+            borderRadius: 23,
+            paddingVertical: 2,
           }}
         >
-          <Text style={styles.greeting}>
-            {"Hello again. \nSign up to get started"}
-          </Text>
-          <TouchableOpacity style={styles.avatar}>
-            <Ionicons
-              name="ios-add"
-              size={40}
-              color="#FFF"
-              style={{ marginTop: 6, marginLeft: 2 }}
-            />
-          </TouchableOpacity>
+          <TextInput
+            placeholder="Name"
+            placeholderTextColor="#00716F"
+            onChangeText={(name) => this.setState({ name })}
+            value={this.state.name}
+            style={{ paddingHorizontal: 10 }}
+          />
         </View>
 
-        <View style={styles.errorMessagage}>
-          {this.state.errorMessagage && (
-            <Text style={styles.error}>{this.state.errorMessagage}</Text>
-          )}
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            marginHorizontal: 55,
+            borderWidth: 2,
+            marginTop: 10,
+            paddingHorizontal: 10,
+            borderColor: "#00716F",
+            borderRadius: 23,
+            paddingVertical: 2,
+          }}
+        >
+          <TextInput
+            placeholder="Email"
+            placeholderTextColor="#00716F"
+            onChangeText={(email) => this.setState({ email })}
+            value={this.state.email}
+            style={{ paddingHorizontal: 10 }}
+          />
         </View>
-        <View style={styles.form}>
-          <View>
-            <TextInput
-              style={styles.input}
-              autoCapitalize="none"
-              placeholder="Full Name..."
-              placeholderTextColor="#003f5c"
-              onChangeText={(name) => this.setState({ name })}
-              value={this.state.name}
-            />
-          </View>
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            marginHorizontal: 55,
+            borderWidth: 2,
+            marginTop: 10,
+            paddingHorizontal: 10,
+            borderColor: "#00716F",
+            borderRadius: 23,
+            paddingVertical: 2,
+          }}
+        >
+          <TextInput
+            secureTextEntry
+            placeholder="Password"
+            placeholderTextColor="#00716F"
+            onChangeText={(password) => this.setState({ password })}
+            value={this.state.password}
+            style={{ paddingHorizontal: 10 }}
+          />
+        </View>
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            marginHorizontal: 55,
+            borderWidth: 2,
+            marginTop: 10,
+            paddingHorizontal: 10,
+            borderColor: "#00716F",
+            borderRadius: 23,
+            paddingVertical: 2,
+          }}
+        >
+          <TextInput
+            secureTextEntry
+            placeholder="Confirm Password"
+            placeholderTextColor="#00716F"
+            onChangeText={(confirmpass) => this.setState({ confirmpass })}
+            value={this.state.confirmpass}
+            style={{ paddingHorizontal: 10 }}
+          />
+        </View>
 
-          <View style={{ marginTop: 25 }}>
-            <TextInput
-              style={styles.input}
-              autoCapitalize="none"
-              placeholder="Email..."
-              placeholderTextColor="#003f5c"
-              onChangeText={(email) => this.setState({ email })}
-              value={this.state.email}
-            />
-          </View>
-
-          <View style={{ marginTop: 25 }}>
-            <TextInput
-              style={styles.input}
-              secureTextEntry
-              autoCapitalize="none"
-              placeholder="Password..."
-              placeholderTextColor="#003f5c"
-              onChangeText={(password) => this.setState({ password })}
-              value={this.state.password}
-            />
-          </View>
-
-          <TouchableOpacity style={styles.button} onPress={this.handleSignUp}>
-            <Text style={{ color: "#FFF", fontWeight: "bold" }}>Sign In</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={{ alignSelf: "center", marginTop: 32 }}
-            onPress={() => this.props.navigation.navigate}
-          >
-            <Text style={{ color: "#414959", fontSize: 13 }}>
-              New to Manager Account?
-              <Text style={{ fontWeight: "500", color: "#E9446A" }}>Login</Text>
+        <View
+          style={{
+            marginHorizontal: 55,
+            alignItems: "center",
+            justifyContent: "center",
+            marginTop: 25,
+            backgroundColor: "#00716F",
+            paddingVertical: 10,
+            borderRadius: 23,
+          }}
+        >
+          <TouchableOpacity onPress={this.handleSignUp}>
+            <Text
+              style={{
+                color: "white",
+              }}
+            >
+              Register
             </Text>
           </TouchableOpacity>
         </View>
@@ -136,70 +174,3 @@ export default class RegisterScreen extends Component {
     );
   }
 }
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  greeting: {
-    marginTop: 32,
-    fontSize: 18,
-    fontWeight: "400",
-    textAlign: "center",
-  },
-  errorMessagage: {
-    height: 72,
-    alignItems: "center",
-    justifyContent: "center",
-    marginHorizontal: 30,
-  },
-
-  error: {
-    color: "#E9446A",
-    fontSize: 13,
-    fontWeight: "600",
-    textAlign: "center",
-  },
-  form: {
-    marginBottom: 48,
-    marginHorizontal: 30,
-  },
-  input: {
-    backgroundColor: "#E0E0E0",
-    borderRadius: 20,
-    justifyContent: "center",
-    padding: 15,
-    height: 50,
-    color: "#228B22",
-  },
-  button: {
-    width: "80%",
-    backgroundColor: "#fb5b5a",
-    borderRadius: 20,
-    height: 50,
-    alignItems: "center",
-    justifyContent: "center",
-    marginTop: 40,
-    marginBottom: 10,
-    marginHorizontal: 30,
-  },
-  back: {
-    position: "absolute",
-    top: 28,
-    left: 28,
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    backgroundColor: "rgba(21,22,48,0.1)",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  avatar: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-    backgroundColor: "#E1E2E6",
-    marginTop: 15,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-});
