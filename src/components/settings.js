@@ -82,4 +82,15 @@ export default {
       />
     ),
   },
+  auto: {
+    name: "Auto",
+    icon: ({ size, color, ...props }) => (
+      <MaterialCommunityIcons
+        size={size || theme.sizes.font}
+        color={color || theme.colors.accent}
+        name="autorenew"
+        {...props}
+      />
+    ),
+  },
 };

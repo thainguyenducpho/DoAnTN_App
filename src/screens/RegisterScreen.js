@@ -12,7 +12,7 @@ import { Ionicons } from "@expo/vector-icons";
 import * as firebase from "firebase";
 
 export default class RegisterScreen extends Component {
-  static navigationOptions = { headerShown: false };
+  // static navigationOptions = { headerShown: false };
 
   state = {
     name: "",
@@ -23,15 +23,20 @@ export default class RegisterScreen extends Component {
   };
 
   handleSignUp = () => {
-    firebase
-      .auth()
-      .createUserWithEmailAndPassword(this.state.email, this.state.password)
-      .then((userCredentials) => {
-        return userCredentials.user.updateProfile({
-          displayName: this.state.name,
-        });
-      })
-      .catch((error) => this.setState({ errorMessagage: error.message }));
+    const { password, confirmpass } = this.state;
+    if (password !== confirmpass) {
+      alert("Passwords don't match");
+    } else {
+      firebase
+        .auth()
+        .createUserWithEmailAndPassword(this.state.email, this.state.password)
+        .then((userCredentials) => {
+          return userCredentials.user.updateProfile({
+            displayName: this.state.name,
+          });
+        })
+        .catch((error) => this.setState({ errorMessagage: error.message }));
+    }
   };
 
   render() {
@@ -47,7 +52,7 @@ export default class RegisterScreen extends Component {
             alignSelf: "center",
           }}
         >
-          Save the world
+          Nông trại xanh
         </Text>
 
         <Text

@@ -52,7 +52,7 @@ export default class NotificationScreen extends Component {
       this.setState({
         temp_display: data,
       });
-      console.log("temp_display: ", data);
+      // console.log("temp_display: ", data);
     });
 
     rootRef.on("value", (snapshot) => {
@@ -60,7 +60,7 @@ export default class NotificationScreen extends Component {
       this.setState({
         humi_display: data,
       });
-      console.log("humi_display: ", data);
+      // console.log("humi_display: ", data);
     });
 
     rootRef.on("value", (snapshot) => {
@@ -68,44 +68,44 @@ export default class NotificationScreen extends Component {
       this.setState({
         soil_display: data,
       });
-      console.log("soil_display: ", data);
+      // console.log("soil_display: ", data);
     });
 
     rootRef.on("value", (snapshot) => {
       const root = [];
       root.push(
         {
-          id: Math.floor(Math.random() * 1000) + 1,
+          id: Math.floor(Math.random() * 10000) + 1,
           title: "TEMPERATURE",
           number: snapshot.child("tempDHT").val() + " ℃",
         },
         {
-          id: Math.floor(Math.random() * 1000) + 1,
+          id: Math.floor(Math.random() * 10000) + 1,
           title: "HUMIDITY",
           number: snapshot.child("humDHT").val() + " %",
         },
         {
-          id: Math.floor(Math.random() * 1000) + 1,
+          id: Math.floor(Math.random() * 10000) + 1,
           title: "SOIL MOIST",
           number: snapshot.child("soilMoist").val() + " %",
         },
         {
-          id: Math.floor(Math.random() * 1000) + 1,
+          id: Math.floor(Math.random() * 10000) + 1,
           title: "PUMP STATUS",
           number: snapshot.child("pumpStatus").val() == 1 ? "ON" : "OFF",
         },
         {
-          id: Math.floor(Math.random() * 1000) + 1,
+          id: Math.floor(Math.random() * 10000) + 1,
           title: "FAN STATUS",
           number: snapshot.child("fanStatus").val() == 1 ? "ON" : "OFF",
         },
         {
-          id: Math.floor(Math.random() * 1000) + 1,
+          id: Math.floor(Math.random() * 10000) + 1,
           title: "LAMP STATUS",
           number: snapshot.child("lampStatus").val() == 1 ? "ON" : "OFF",
         },
         {
-          id: Math.floor(Math.random() * 1000) + 1,
+          id: Math.floor(Math.random() * 10000) + 1,
           title: "LIGHT STATUS",
           number:
             snapshot.child("lightStatus").val() == 1 ? "Day Time" : "Nigh Time",
@@ -208,7 +208,9 @@ export default class NotificationScreen extends Component {
               />
             </View>
             <View style={styles.avatarContainer}>
-              <TouchableOpacity onPress={this.signOutUser}>
+              <TouchableOpacity
+                onPress={() => this.props.navigation.navigate("Profile")}
+              >
                 <Image
                   source={require("../images/spkt_cee.png")}
                   style={styles.avatar}

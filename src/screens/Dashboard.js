@@ -1,11 +1,5 @@
 import React, { Component } from "react";
-import {
-  Button,
-  ScrollView,
-  StyleSheet,
-  TouchableOpacity,
-  TouchableHighlight,
-} from "react-native";
+import { ScrollView, StyleSheet, TouchableOpacity } from "react-native";
 import { LineChart, Path } from "react-native-svg-charts";
 import * as shape from "d3-shape";
 
@@ -24,11 +18,15 @@ class Dashboard extends Component {
       lampStatus: "black",
       pumpStatus: "black",
       fanStatus: "black",
+      modeStatus: "black",
       temp_display: "",
       loading: false,
     };
   }
   componentDidMount() {
+    const { email, displayName } = firebase.auth().currentUser;
+    this.setState({ email, displayName });
+
     rootRef.on("value", (snapshot) => {
       const data = snapshot.child("tempDHT").val();
       this.setState({
@@ -56,6 +54,13 @@ class Dashboard extends Component {
         fanStatus: data,
       });
     });
+
+    rootRef.on("value", (snapshot) => {
+      const data = snapshot.child("mode").val();
+      this.setState({
+        modeStatus: data,
+      });
+    });
   }
 
   onLampButtonPress = () => {
@@ -76,6 +81,12 @@ class Dashboard extends Component {
       : rootRef.child("pumpStatus").set(1);
   };
 
+  onModeButtonPress = () => {
+    this.state.modeStatus == 1
+      ? rootRef.child("mode").set(0)
+      : rootRef.child("mode").set(1);
+  };
+
   render() {
     const { settings } = this.props;
     const LightIcon = settings["light"].icon;
@@ -85,6 +96,7 @@ class Dashboard extends Component {
     const WiFiIcon = settings["wi-fi"].icon;
     const ElectricityIcon = settings["electricity"].icon;
     const PumpIcon = settings["pump"].icon;
+    const AutoIcon = settings["auto"].icon;
 
     lampStyle = (myColor) => {
       return {
@@ -113,11 +125,20 @@ class Dashboard extends Component {
       };
     };
 
+    modeStyle = (myColor) => {
+      return {
+        backgroundColor: myColor == 1 ? "#3ED400" : "black",
+        width: 120,
+        height: 120,
+        borderRadius: 151 / 2,
+      };
+    };
+
     return (
       <Block style={styles.dashboard}>
         <Block column style={{ marginVertical: theme.sizes.base * 2 }}>
           <Text welcome>Hello</Text>
-          <Text name>Thai</Text>
+          <Text name>{this.state.displayName}</Text>
         </Block>
 
         <Block row style={{ paddingVertical: 10 }}>
@@ -154,20 +175,21 @@ class Dashboard extends Component {
             >
               <TouchableOpacity
                 activeOpacity={0.8}
-                onPress={this.onLampButtonPress}
+                onPress={this.onModeButtonPress}
                 onLongPress={() =>
-                  this.props.navigation.navigate("Settings", { name: "light" })
+                  this.props.navigation.navigate("Settings", { name: "auto" })
                 }
               >
-                <Block center middle style={lampStyle(this.state.lampStatus)}>
-                  <LightIcon size={38} />
+                <Block center middle style={modeStyle(this.state.modeStatus)}>
+                  <AutoIcon size={38} />
                   <Text button style={{ marginTop: theme.sizes.base * 0.5 }}>
-                    {settings["light"].name}
+                    {settings["auto"].name}
                   </Text>
                 </Block>
               </TouchableOpacity>
 
               <TouchableOpacity
+                disabled={this.state.modeStatus == 1 ? true : false}
                 activeOpacity={0.8}
                 onPress={this.onFanButtonPress}
                 onLongPress={() =>
@@ -189,6 +211,7 @@ class Dashboard extends Component {
               style={{ marginVertical: theme.sizes.base }}
             >
               <TouchableOpacity
+                disabled={this.state.modeStatus == 1 ? true : false}
                 activeOpacity={0.8}
                 onPress={this.onPumpButtonPress}
                 onLongPress={() =>
@@ -206,21 +229,23 @@ class Dashboard extends Component {
               </TouchableOpacity>
 
               <TouchableOpacity
+                disabled={this.state.modeStatus == 1 ? true : false}
                 activeOpacity={0.8}
+                onPress={this.onLampButtonPress}
                 onLongPress={() =>
-                  this.props.navigation.navigate("Settings", { name: "ac" })
+                  this.props.navigation.navigate("Settings", { name: "light" })
                 }
               >
-                <Block center middle style={styles.button}>
-                  <ACIcon size={38} />
+                <Block center middle style={lampStyle(this.state.lampStatus)}>
+                  <LightIcon size={38} />
                   <Text button style={{ marginTop: theme.sizes.base * 0.5 }}>
-                    {settings["ac"].name}
+                    {settings["light"].name}
                   </Text>
                 </Block>
               </TouchableOpacity>
             </Block>
 
-            <Block
+            {/* <Block
               row
               space="around"
               style={{ marginVertical: theme.sizes.base }}
@@ -254,7 +279,7 @@ class Dashboard extends Component {
                   </Text>
                 </Block>
               </TouchableOpacity>
-            </Block>
+            </Block> */}
           </Block>
         </ScrollView>
       </Block>

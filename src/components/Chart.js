@@ -61,7 +61,7 @@ export default class Chart extends React.Component {
           width={Dimensions.get("window").width}
           theme={VictoryTheme.material}
           minDomain={{ y: 10 }}
-          maxDomain={{ y: 80 }}
+          maxDomain={{ y: 100 }}
           domain={{ x: [0, 5] }}
         >
           <VictoryAxis dependentAxis style={{ tickLabels: { angle: -60 } }} />

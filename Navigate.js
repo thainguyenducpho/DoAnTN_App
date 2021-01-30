@@ -30,6 +30,9 @@ const NotificationStackNavigator = createStackNavigator({
   Notification: NotificationScreen,
   Detail: DetailsScreen,
 });
+const ProfileStackNavigator = createStackNavigator({
+  Profile: ProfileScreen,
+});
 
 const AppTabNavigator = createBottomTabNavigator(
   {
@@ -50,7 +53,7 @@ const AppTabNavigator = createBottomTabNavigator(
       },
     },
     Profile: {
-      screen: ProfileScreen,
+      screen: ProfileStackNavigator,
       navigationOptions: {
         tabBarIcon: ({ tintColor }) => (
           <Ionicons name="ios-person" size={24} color={tintColor} />
